@@ -11,5 +11,17 @@ namespace PartVision.Standard
 		{
 			InitializeComponent();
 		}
+
+		public WorkViewModel ViewModel;
+
+		protected override void OnBindingContextChanged()
+		{
+			if (BindingContext is WorkViewModel viewModel)
+			{
+				ViewModel = viewModel;
+			}
+
+			base.OnBindingContextChanged();
+		}
 	}
 }

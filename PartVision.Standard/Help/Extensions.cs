@@ -2,10 +2,11 @@
 using System.IO;
 using Plugin.Media.Abstractions;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace PartVision.Standard
 {
-	public static class Extensions
+	public static partial class Extensions
 	{
 		public static string AsVisionTagId(this GestureCommand command)
 		{

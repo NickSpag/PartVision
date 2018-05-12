@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             x:Class="PartVision.Standard.EntryPage"
+             xmlns:local="clr-namespace:PartVision.Standard;">
+    
+    <ContentPage.BindingContext>
+        <local:EntryPageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackLayout Grid.Row="0"
+                     Grid.Column="1"
+                     Grid.ColumnSpan="9"
+                     VerticalOptions="CenterAndExpand">
+
+            <Label Text="Before you start:"
+                   FontSize="Large"
+                   FontAttributes="Bold"/>
+
+            <Label FontSize="Large"
+                   Margin="0,10,0,0"
+                   Text="How will you be using the app?"/>
+        </StackLayout>
+
+        <StackLayout Grid.Row="1"
+                     Grid.Column="2"
+                     Grid.ColumnSpan="7"
+                     VerticalOptions="CenterAndExpand">
+            
+            <Button Margin="0,5,0,5"
+                    BackgroundColor="Teal"
+                    Text="Sighted"
+                    TextColor="White"
+                    Command="{Binding SelectUserRoleCommand }"
+                    CommandParameter="{x:Static local:UserRole.Sighted}"
+                    CornerRadius="12"/>
+
+            <Button Margin="0,5,0,5"
+                    BackgroundColor="Teal"
+                    Text="Unsighted"
+                    TextColor="White"
+                    Command="{Binding SelectUserRoleCommand }"
+                    CommandParameter="{x:Static local:UserRole.Unsighted}"
+                    CornerRadius="12"/>
+        </StackLayout>
+    
+    </Grid>
+</ContentPage>

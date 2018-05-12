@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Plugin.Media.Abstractions;
 
 namespace PartVision.Standard
 {

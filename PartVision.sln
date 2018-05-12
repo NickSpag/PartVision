@@ -1,9 +1,9 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartVision.iOS", "iOS\PartVision.iOS.csproj", "{711E722D-33C0-4CF7-AF2C-B41D00613A75}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartVision.iOS", "PartVision.iOS\PartVision.iOS.csproj", "{711E722D-33C0-4CF7-AF2C-B41D00613A75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartVision.Droid", "Droid\PartVision.Droid.csproj", "{7F4E3925-F725-4712-A786-2096F83BB5F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartVision.Droid", "PartVision.Droid\PartVision.Droid.csproj", "{7F4E3925-F725-4712-A786-2096F83BB5F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartVision.Standard", "PartVision.Standard\PartVision.Standard.csproj", "{9131F560-F2C3-4213-80C5-2F4B89E75A64}"
 EndProject

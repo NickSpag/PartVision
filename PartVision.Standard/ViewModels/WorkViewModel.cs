@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace PartVision.Standard
 {
@@ -17,14 +18,14 @@ namespace PartVision.Standard
 		{
 			BeginWorkCommand = new Command(BeginWorkSequence);
 			TakeStillCommand = new Command(TakeStill);
-			BeginCaptureCommand = new Command(BeginCapture);
+			WatchGestureCommand = new Command(WatchForGesture);
 		}
 
 		public ICommand BeginWorkCommand { get; }
 
 		public ICommand TakeStillCommand { get; }
 
-		public ICommand BeginCaptureCommand { get; }
+		public ICommand WatchGestureCommand { get; }
 
 		private StreamImageSource _frame;
 
@@ -35,18 +36,68 @@ namespace PartVision.Standard
 
 		}
 
-		public void TakeStill()
+		public async void TakeStill()
 		{
-			//CrossTextToSpeech.Current.Speak("Training Gesture");
+			frameCapturer.BeginCapture();
+
+			await Task.Delay(TimeSpan.FromSeconds(1));
+
 			frameCapturer.TakeStill(SetFrame);
 		}
 
-		public void BeginCapture()
+		public async void WatchForGesture()
 		{
-			//CrossTextToSpeech.Current.Speak("Recognition Gesture");
+			var waitCancellation = new CancellationTokenSource();
+			var speechCancellation = new CancellationTokenSource();
+
+			GestureCommand? recognizedGesture = null;
+
+			CrossTextToSpeech.Current.Speak("Watching for gesture", null, null, null, null, speechCancellation.Token);
 
 			frameCapturer = DependencyService.Get<ICaptureFrames>();
-			frameCapturer.BeginCapture();
+			frameCapturer.WatchForGesture(GestureCaught);
+
+			try
+			{
+				await Task.Delay(TimeSpan.FromSeconds(10), waitCancellation.Token);
+			}
+			catch (Exception ex)
+			{
+				if (recognizedGesture.HasValue)
+				{
+					switch (recognizedGesture.Value)
+					{
+						case GestureCommand.Recognize:
+							speechCancellation.Cancel();
+							await CrossTextToSpeech.Current.Speak("Recognition gesture.");
+							//await BeginRecognition();
+							break;
+						case GestureCommand.Train:
+							speechCancellation.Cancel();
+							await CrossTextToSpeech.Current.Speak("Training gesture.");
+							//await BeginTraining();
+							break;
+						default:
+							await CrossTextToSpeech.Current.Speak("No gesture recognizezd");
+							break;
+					}
+				}
+			}
+
+			frameCapturer.StopCapture();
+
+			void GestureCaught(GestureCommand gestureGiven)
+			{
+				//order is important here
+				recognizedGesture = gestureGiven;
+				waitCancellation.Cancel();
+			}
+		}
+
+
+		public void BeginCapture()
+		{
+
 		}
 
 		private void SetFrame(byte[] bytes)
@@ -66,13 +117,6 @@ namespace PartVision.Standard
 			}
 		}
 
-		private void SetFrame(Stream stream)
-		{
-			Frame = ImageSource.FromStream(() => stream);
-
-			System.Console.WriteLine("frame set");
-		}
-
 		private async void BeginWorkSequence()
 		{
 			//initiate camera
@@ -80,6 +124,49 @@ namespace PartVision.Standard
 
 			await CrossTextToSpeech.Current.Speak("Ready to work");
 
+
+		}
+
+
+		private async Task BeginTraining()
+		{
+			var images = new List<byte[]>();
+
+			var trainingItemSession = Guid.NewGuid();
+
+			var frameCapture = DependencyService.Get<ICaptureFrames>();
+			frameCapture.BeginCapture();
+
+			await CrossTextToSpeech.Current.Speak("Prepare to take photos");
+
+			await TakePhotos();
+
+			var batch = new PVPartBatch(images);
+
+			await VisionService.UploadPartBatch(batch);
+
+			void AddImage(byte[] bytes)
+			{
+				images.Add(bytes);
+			}
+
+			async Task TakePhotos()
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					await Task.Delay(TimeSpan.FromSeconds(1));
+
+					var index = i + 1;
+
+					await CrossTextToSpeech.Current.Speak($"Taking photo {index}");
+
+					frameCapturer.TakeStill(AddImage);
+				}
+			}
+		}
+
+		private async Task BeginRecognition()
+		{
 
 		}
 
@@ -91,36 +178,6 @@ namespace PartVision.Standard
 		private async Task BeginOCRDetection()
 		{
 
-		}
-
-		private async Task BeginTrainingProcess()
-		{
-			var images = new List<Stream>();
-
-			var trainingItemSession = Guid.NewGuid();
-
-			var frameCapturer = DependencyService.Get<ICaptureFrames>();
-
-			await CrossTextToSpeech.Current.Speak("Prepare to take photos");
-
-			await Task.Delay(TimeSpan.FromSeconds(2.5));
-
-			for (int i = 0; i < 5; i++)
-			{
-				var index = i + 1;
-
-				await CrossTextToSpeech.Current.Speak($"Taking photo {index}");
-
-				//frameCapturer.TakeStill();
-			}
-
-
-
-		}
-
-		private async Task TakeVideo()
-		{
-			await CrossTextToSpeech.Current.Speak("Taking photo");
 		}
 
 

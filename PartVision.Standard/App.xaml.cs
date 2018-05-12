@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 using Xamarin.Forms;
-using System.Threading.Tasks;
-using System.Linq;
+
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.AppCenter;
@@ -23,12 +23,28 @@ namespace PartVision.Standard
 			else
 				DependencyService.Register<CloudDataStore>();
 
-			if (Xamarin.Forms.Device.RuntimePlatform == Xamarin.Forms.Device.iOS)
-				MainPage = new MainPage();
-			else
-				MainPage = new NavigationPage(new MainPage());
+			ConfigureNavigationStack();
 
 			TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+		}
+
+		private void ConfigureNavigationStack()
+		{
+			var rootPage = new MainPage();
+
+			if (Xamarin.Forms.Device.RuntimePlatform == Xamarin.Forms.Device.iOS)
+			{
+				MainPage = rootPage;
+			}
+			else
+			{
+				MainPage = new NavigationPage(rootPage);
+			}
+		}
+
+		private bool UserRoleIsSet()
+		{
+			return false;
 		}
 
 		protected override void OnStart()

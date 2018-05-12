@@ -8,6 +8,9 @@ namespace PartVision.Standard
 		void BeginCapture();
 		void StopCapture();
 
+		void WatchForGesture(Action<GestureCommand> gestureCallback);
+		void WatchForPart(Action<string> partCallback);
+
 		void TakeStill(Action<byte[]> bytes);
 	}
 }

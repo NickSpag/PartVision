@@ -14,9 +14,10 @@ namespace PartVision.Standard
 {
 	public class CameraPageViewModel : BaseViewModel
 	{
-		GestureCommand commandType => IsRecognizeCommand ? GestureCommand.Recognize : GestureCommand.Train;
+		private GestureCommand commandType => IsRecognizeCommand ? GestureCommand.Recognize : GestureCommand.Train;
 
-		public ObservableCollection<PVImageUpload> GestureImages { get; set; } = new ObservableCollection<PVImageUpload>();
+		public ObservableCollection<PVImageUpload> GestureImages { get; set; }
+														= new ObservableCollection<PVImageUpload>();
 		public bool IsRecognizeCommand { get; set; }
 
 		public CameraPageViewModel()

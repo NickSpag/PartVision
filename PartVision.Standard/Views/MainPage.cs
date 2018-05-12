@@ -8,11 +8,21 @@ namespace PartVision.Standard
 	{
 		public MainPage()
 		{
+
 			Page workPage, cameraPage = null;
 
 			switch (Device.RuntimePlatform)
 			{
 				case Device.iOS:
+					cameraPage = new NavigationPage(new CameraPage())
+					{
+						Title = "Camera"
+					};
+					workPage = new NavigationPage(new WorkPage())
+					{
+						Title = "Work"
+					};
+					break;
 				default:
 					cameraPage = new CameraPage()
 					{
@@ -22,39 +32,27 @@ namespace PartVision.Standard
 					{
 						Title = "Work"
 					};
-					//itemsPage = new NavigationPage(new ItemsPage())
-					//{
-					//    Title = "Browse"
-					//};
-					//aboutPage = new NavigationPage(new AboutPage())
-					//{
-					//    Title = "About"
-					//};
-					//itemsPage.Icon = "tab_feed.png";
-					//aboutPage.Icon = "tab_about.png";
 					break;
-					//default:
-					//cameraPage = new CameraPage()
-					//{
-					//    Title = "Camera"
-					//};
-					//itemsPage = new ItemsPage()
-					//{
-					//    Title = "Browse"
-					//};
-
-					//aboutPage = new AboutPage()
-					//{
-					//    Title = "About"
-					//};
-					//break;
 			}
+
 			Children.Add(cameraPage);
 			Children.Add(workPage);
-			//Children.Add(itemsPage);
-			//Children.Add(aboutPage);
 
 			Title = Children[0].Title;
+		}
+
+		protected override async void OnAppearing()
+		{
+			if (!User.CurrentRole.HasValue)
+			{
+				await Navigation.PushModalAsync(new EntryPage());
+			}
+			else
+			{
+				//populate tabs
+			}
+
+			base.OnAppearing();
 		}
 
 		protected override void OnCurrentPageChanged()

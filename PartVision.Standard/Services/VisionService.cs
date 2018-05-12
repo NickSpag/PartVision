@@ -13,11 +13,6 @@ using Xamarin.Forms;
 
 namespace PartVision.Standard
 {
-	public enum GestureCommand
-	{
-		Train,
-		Recognize
-	}
 
 	public static class VisionService
 	{
@@ -52,6 +47,18 @@ namespace PartVision.Standard
 		/// receive notification that image needs classification by someone sighted
 		/// 
 		/// pull down model
+
+		public static async Task GetUntaggedSets()
+		{
+			var endpoint = new TrainingApi() { ApiKey = PrivateKeys.TrainingKey };
+
+			var tags = endpoint.GetTags(PrivateKeys.ProjectId);
+
+
+
+		}
+
+
 
 		public static async Task GetLatestModel()
 		{
@@ -109,6 +116,11 @@ namespace PartVision.Standard
 		public static void UploadPartImage(byte[] imageBytes)
 		{
 			//todo: dynamic part tagging system
+		}
+
+		public static async Task UploadPartBatch(PVPartBatch batch)
+		{
+
 		}
 
 		public async static Task<bool> UploadHandGestureImage(GestureCommand command, Stream stream)
